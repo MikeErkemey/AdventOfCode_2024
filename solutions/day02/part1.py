@@ -19,15 +19,12 @@ for level in matrix:
                 higher = True
         if higher and level[j] <= level[j+1]:
             holds = False
-            print(level[j], level[j+1],1)
             break
         if not higher and level[j] >= level[j+1]:
             holds = False
-            print(level[j], level[j+1],2)
             break
         if abs(level[j] - level[j+1]) > 3:
             holds = False
-            print(level[j], level[j+1],3)
             break
     if holds:
         counter += 1

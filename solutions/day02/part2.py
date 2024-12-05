@@ -33,16 +33,11 @@ with open("../../input/day02.txt") as file:
 
 matrix = [list(map(int, x)) for x in (i.split() for i in input)]
 
-print(matrix)
-
 counter = 0
 
 for i in matrix:
     if check(i,0,1,i[0] < i[1],True) or check(i,0,2,i[0] < i[2],False)or check(i,1,2,i[1] < i[2],False):
-        print(i, "good")
         counter += 1
-    else:
-        print(i, "bad")
 print(counter)
 
 

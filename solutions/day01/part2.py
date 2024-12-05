@@ -25,8 +25,6 @@ for l in right:
 
 print(sum)
 
-# print(sum([x*y for (x,y) in dict.items()]))
-
 
 
 
