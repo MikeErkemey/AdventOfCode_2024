@@ -1,5 +1,7 @@
-def check(level, x, y, asc, pardon):
+import time
 
+
+def check(level, x, y, asc, pardon):
     if y >= len(level):
         return True
 
@@ -27,18 +29,25 @@ def check(level, x, y, asc, pardon):
     return check(level, y, y + 1, asc, False)
 
 
-with open("../../input/day02.txt") as file:
-    input = [line.rstrip() for line in file]
+def solve(input):
+    matrix = [list(map(int, x)) for x in (i.split() for i in input)]
+
+    counter = 0
+
+    for i in matrix:
+        if check(i,0,1,i[0] < i[1],True) or check(i,0,2,i[0] < i[2],False)or check(i,1,2,i[1] < i[2],False):
+            counter += 1
+    return counter
 
 
-matrix = [list(map(int, x)) for x in (i.split() for i in input)]
+if __name__ == '__main__':
+    with open("../../input/day02.txt") as file:
+        input = [line.rstrip() for line in file]
 
-counter = 0
+    start = time.time()
+    print(solve(input))
+    print(f"Execution Time: {round((time.time() - start) * 1000)} ms")
 
-for i in matrix:
-    if check(i,0,1,i[0] < i[1],True) or check(i,0,2,i[0] < i[2],False)or check(i,1,2,i[1] < i[2],False):
-        counter += 1
-print(counter)
 
 
 
