@@ -1,33 +1,42 @@
-import sys
 import time
 
 
 def solve(input):
+    a = int(input[0].split(" ")[-1])
+    b = int(input[1].split(" ")[-1])
+    c = int(input[2].split(" ")[-1])
     program = [int(x) for x in input[4].split(" ")[-1].split(",")]
+    o = [0,1,2,3,a,b,c]
+    outputs = []
+    i = 0
 
-    # b = a%8 -> b = b^2 -> c = a//(2**b) -> b ^ c -> a // 8 -> b^7 -> print(b) -> jmp 0
+    while i+1 < len(program):
+        opcode = program[i]
+        operand = program[i+1]
+        if opcode == 0:
+            v = o[operand]
+            o[4] = o[4]//(2**v)
+        if opcode == 1:
+            o[5] = o[5] ^ operand
+        if opcode == 2:
+            v = o[operand]
+            o[5] = v % 8
+        if opcode == 3:
+            if o[4] != 0:
+                i = operand
+                continue
+        if opcode == 4:
+            o[5] = o[5] ^ o[6]
+        if opcode == 5:
+            v = o[operand]
+            outputs.append(v%8)
+        if opcode == 7:
+            v = o[operand]
+            o[6] = o[4]//(2**v)
+        i += 2
 
-    # b = (a%8^2) ^c^7
-    # c = a//(2**(a%8^2))
-    # a = a//8
-    # print(len(outputs), len(program))
+    return ','.join([str(x) for x in outputs])
 
-    return reverse(0,len(program)-1,program)
-
-def reverse(a,index, program):
-    arr = []
-    for i in range(0,8):
-        ax = a * 8 + i
-        x = ((((ax%8)^2) ^ (ax//(2**((ax%8)^2))))%8) ^ 7
-        if x == program[index]:
-            arr.append(ax)
-
-    if index == 0:
-        return min(arr)
-    if len(arr) == 0:
-        return sys.maxsize
-
-    return min([reverse(ax, index-1,program) for ax in arr])
 
 if __name__ == '__main__':
     with open("../../input/day17.txt") as file:
