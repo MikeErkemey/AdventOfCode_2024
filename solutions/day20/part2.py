@@ -8,7 +8,7 @@ def solve(input):
     for i in range(len(input)):
         m.append([])
         for j in range(len(input[i])):
-            if input[i][j] =='S':
+            if input[i][j] == 'S':
                 sx,sy = j,i
             elif input[i][j] == 'E':
                 ex,ey = j,i
@@ -33,23 +33,10 @@ def solve(input):
 
     ma = max([max(i) for i in m])
     m[ey][ex] = ma+1
-    q = deque()
-    q.append((sx,sy))
-    dirs = [(1,0),(0,1), (-1,0), (0,-1)]
-    visited = set()
     res = 0
 
-    while q:
-        cx,cy = q.popleft()
-        if (cx,cy) in visited:
-            continue
-        visited.add((cx,cy))
-        for d in dirs:
-            dx,dy = d
-            nx,ny = dx + cx, cy + dy
-            if input[ny][nx] == '.':
-                q.append((nx,ny))
-
+    for p in visited:
+        cx,cy = p
         for i in range(-20, 21):
             for j in range(-20, 21):
                 test = abs(i) + abs(j)
@@ -59,7 +46,7 @@ def solve(input):
                     nx,ny = cx + j, cy + i
                     if 0 <= ny < len(m) and 0 <= nx < len(m[0]) and input[ny][nx] != '#':
                         if m[ny][nx] - m[cy][cx] - test >= 100:
-                            res+=1
+                            res += 1
 
     return res
 
