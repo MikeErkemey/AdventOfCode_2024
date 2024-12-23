@@ -8,7 +8,7 @@ def solve(input):
     for s in input2:
         connections.setdefault(s[0], set()).add(s[1])
         connections.setdefault(s[1], set()).add(s[0])
-
+    
     @cache
     def getSets(party: frozenset, openConnections: frozenset):
         maxParty = party
@@ -18,7 +18,7 @@ def solve(input):
                 nParty = getSets(frozenset(party.union({c})), frozenset(intersect))
                 if len(maxParty) < len(nParty):
                     maxParty = nParty
-        return set(sorted(maxParty))
+        return maxParty
 
     partyMax = set()
     for k,v in connections.items():
