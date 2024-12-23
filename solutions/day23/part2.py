@@ -1,5 +1,4 @@
 import time
-from functools import cache
 
 def solve(input):
     input2 = [s.split("-") for s in input]
@@ -10,7 +9,7 @@ def solve(input):
         connections.setdefault(s[1], set()).add(s[0])
     partyMax = set()
     visited = set()
-    @cache
+
     def getSets(party: frozenset, openConnections: frozenset):
         maxParty = party
         for c in openConnections:
@@ -27,7 +26,7 @@ def solve(input):
                     maxParty = nParty
 
         return maxParty
-    # df,kg,la,mp,pb,qh,sk,th,vn,ww,xp,yp,zk
+
     for k,v in connections.items():
         if len(partyMax) >= len(v) or k in visited:
             continue
