@@ -9,36 +9,29 @@ def solve(input):
         connections.setdefault(s[0], set()).add(s[1])
         connections.setdefault(s[1], set()).add(s[0])
 
-    maxSize = max(len(v) for v in connections.values())
-
     partyMax = set()
+
+    @cache
+    def getSets(p: frozenset, curSet: frozenset):
+        maxSet = set(sorted(p))
+        for c in curSet:
+            i1 = curSet.intersection(connections[c])
+            i2 = p.intersection(connections[c])
+            if i2 == p:
+                t = getSets(frozenset(p.union({c})), frozenset(i1))
+                if len(maxSet) < len(t):
+                    maxSet = t
+        m = set(sorted(maxSet))
+        return m
+
     for k,v in connections.items():
-        party = getSets({k},v,connections,maxSize)
+        party = getSets(frozenset({k}),frozenset(v))
         if len(party) > len(partyMax):
             partyMax = party
 
     return ','.join(sorted(partyMax))
 
 # @cache
-def getSets(p,curSet:set, connections, maxSize):
-    psort = tuple(sorted(p))
-    curSetSort = tuple(sorted(curSet))
-    if (psort, curSetSort) in lookUp:
-        return lookUp[(psort, curSetSort)]
-
-    if len(p) >= maxSize:
-        return p
-    maxSet = set(sorted(p))
-    for c in curSet:
-        u1 = curSet.intersection(connections[c])
-        u2 = p.intersection(connections[c])
-        if u2 == p:
-            t = getSets(p.union({c}), u1, connections, maxSize)
-            if len(maxSet) < len(t):
-                maxSet = t
-    m = set(sorted(maxSet))
-    lookUp[(psort, curSetSort)] = m
-    return m
 
 
 
@@ -46,7 +39,6 @@ if __name__ == '__main__':
     with open("../../input/day23.txt") as file:
         input = [line.rstrip() for line in file]
 
-    lookUp = dict()
     start = time.time()
     print(solve(input))
     print(f"Execution Time: {round((time.time() - start) * 1000)} ms")
