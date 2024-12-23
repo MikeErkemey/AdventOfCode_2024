@@ -9,30 +9,24 @@ def solve(input):
         connections.setdefault(s[0], set()).add(s[1])
         connections.setdefault(s[1], set()).add(s[0])
 
-    partyMax = set()
-
     @cache
     def getSets(p: frozenset, curSet: frozenset):
-        maxSet = set(sorted(p))
+        maxParty = p
         for c in curSet:
-            i1 = curSet.intersection(connections[c])
-            i2 = p.intersection(connections[c])
-            if i2 == p:
-                t = getSets(frozenset(p.union({c})), frozenset(i1))
-                if len(maxSet) < len(t):
-                    maxSet = t
-        m = set(sorted(maxSet))
-        return m
+            intersect = curSet.intersection(connections[c])
+            if p.issubset(connections[c]):
+                party = getSets(frozenset(p.union({c})), frozenset(intersect))
+                if len(maxParty) < len(party):
+                    maxParty = party
+        return set(sorted(maxParty))
 
+    partyMax = set()
     for k,v in connections.items():
         party = getSets(frozenset({k}),frozenset(v))
         if len(party) > len(partyMax):
             partyMax = party
 
     return ','.join(sorted(partyMax))
-
-# @cache
-
 
 
 if __name__ == '__main__':
