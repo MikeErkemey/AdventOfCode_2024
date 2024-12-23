@@ -3,24 +3,28 @@ from functools import cache
 
 def solve(input):
     input2 = [s.split("-") for s in input]
-    connections = dict()
 
+    connections = dict()
     for s in input2:
         connections.setdefault(s[0], set()).add(s[1])
         connections.setdefault(s[1], set()).add(s[0])
-    
+    partyMax = set()
+
     @cache
     def getSets(party: frozenset, openConnections: frozenset):
         maxParty = party
         for c in openConnections:
-            intersect = openConnections.intersection(connections[c])
             if party.issubset(connections[c]):
+                intersect = openConnections.intersection(connections[c])
+                if len(intersect) + len(party) + 1 <= len(partyMax):
+                    continue
+
                 nParty = getSets(frozenset(party.union({c})), frozenset(intersect))
                 if len(maxParty) < len(nParty):
                     maxParty = nParty
+
         return maxParty
 
-    partyMax = set()
     for k,v in connections.items():
         if len(partyMax) >= len(v):
             continue
