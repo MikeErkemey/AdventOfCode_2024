@@ -22,6 +22,8 @@ def solve(input):
 
     partyMax = set()
     for k,v in connections.items():
+        if len(partyMax) >= len(v):
+            continue
         party = getSets(frozenset({k}),frozenset(v))
         if len(party) > len(partyMax):
             partyMax = party
