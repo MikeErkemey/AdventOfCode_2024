@@ -9,26 +9,30 @@ def solve(input):
         connections.setdefault(s[0], set()).add(s[1])
         connections.setdefault(s[1], set()).add(s[0])
     partyMax = set()
-
+    visited = set()
     @cache
     def getSets(party: frozenset, openConnections: frozenset):
         maxParty = party
         for c in openConnections:
+            if c in visited:
+                continue
+            visited.add(c)
             if party.issubset(connections[c]):
-                intersect = openConnections.intersection(connections[c])
+                intersect = openConnections & connections[c]
                 if len(intersect) + len(party) + 1 <= len(partyMax):
                     continue
 
-                nParty = getSets(frozenset(party.union({c})), frozenset(intersect))
+                nParty = getSets(party | {c}, intersect)
                 if len(maxParty) < len(nParty):
                     maxParty = nParty
 
         return maxParty
-
+    # df,kg,la,mp,pb,qh,sk,th,vn,ww,xp,yp,zk
     for k,v in connections.items():
-        if len(partyMax) >= len(v):
+        if len(partyMax) >= len(v) or k in visited:
             continue
-        party = getSets(frozenset({k}),frozenset(v))
+        visited.add(k)
+        party = getSets(frozenset({k}), frozenset(v) - visited)
         if len(party) > len(partyMax):
             partyMax = party
 
